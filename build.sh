@@ -1,4 +1,5 @@
 #!/bin/bash --posix
+# builds hw_demo app
 
 # show all steps
 set -x
@@ -15,3 +16,4 @@ g++ -o hw_demo hw_demo.cpp
 # sets executable permissions for user, group, and other
 chmod ugo+x ./hw_demo
  
+echo "hw_demo build successful."
