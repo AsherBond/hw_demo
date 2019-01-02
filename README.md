@@ -9,7 +9,7 @@ to test for regressions:
 `./test.sh`
 
 to import the jenkins job (requires github and git plugins):
-`java -jar </path/to/>jenkins-cli.jar -s http[s]://server:port create-job hw_demo < jenkins_job_hw_demo.xml`
+`java -jar </path/to/>jenkins-cli.jar -s http[s]://server:port create-job hw_demo < jenkins_job_hwdemo.xml`
 
 your jenkins instance should also have docker.io installed:
 `apt-get install docker.io`
