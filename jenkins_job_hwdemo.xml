@@ -1,0 +1,68 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>jenkins user chooses the branch to build (assumes jenkins plugins for git and github and branch configured in job or testing all branches is ok).&#xd;
+starts docker container named hw_demo_vm (assumes docker works on jenkins machine)&#xd;
+compiles hw_demo.cpp&#xd;
+tests for regressions (assumes case insensitive hello world + other chars is ok and a comma after hello is ok).&#xd;
+&#xd;
+</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.29.3">
+      <projectUrl>https://github.com/AsherBond/hw_demo/</projectUrl>
+      <displayName></displayName>
+    </com.coravy.hudson.plugins.github.GithubProjectProperty>
+    <com.dabsquared.gitlabjenkins.connection.GitLabConnectionProperty plugin="gitlab-plugin@1.5.11">
+      <gitLabConnection></gitLabConnection>
+    </com.dabsquared.gitlabjenkins.connection.GitLabConnectionProperty>
+    <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.29">
+      <autoRebuild>false</autoRebuild>
+      <rebuildDisabled>false</rebuildDisabled>
+    </com.sonyericsson.rebuild.RebuildSettings>
+  </properties>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@3.9.1">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>https://github.com/AsherBond/hw_demo</url>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>*</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions/>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command># clean up past docker image and container
+docker image rm -f hw_demo || continue
+docker rm -f hw_demo_vm || continue
+
+# build the image
+docker build -t hw_demo .
+
+# run the container to test for regressions
+docker run --name hw_demo_vm -i hw_demo
+</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers/>
+  <buildWrappers>
+    <hudson.plugins.ws__cleanup.PreBuildCleanup plugin="ws-cleanup@0.37">
+      <deleteDirs>false</deleteDirs>
+      <cleanupParameter></cleanupParameter>
+      <externalDelete></externalDelete>
+      <disableDeferredWipeout>false</disableDeferredWipeout>
+    </hudson.plugins.ws__cleanup.PreBuildCleanup>
+  </buildWrappers>
