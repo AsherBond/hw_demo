@@ -20,5 +20,5 @@ your jenkins instance should also be logged into docker hub in order to pull the
 
 `docker login`
 
-use the configure menu to change the branch from * to master or another branch. 
+use the configure menu to change the branch from * to */master or another branch such as */release or */failtest. 
 The failtest branch will cause the test to fail when branch is set to * by default.
